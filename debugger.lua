@@ -230,7 +230,7 @@ end
 
 local SOURCE_CACHE = {}
 
-local function where(info, context_lines)
+local function dbg_where(info, context_lines)
 	local source = SOURCE_CACHE[info.source]
 	if not source then
 		source = {}
@@ -331,7 +331,7 @@ local function cmd_down()
 	if info then
 		stack_inspect_offset = offset
 		dbg_writeln("Inspecting frame: "..format_stack_frame_info(info))
-		if tonumber(dbg.auto_where) then where(info, dbg.auto_where) end
+		if tonumber(dbg.auto_where) then dbg.where(info, dbg.auto_where) end
 	else
 		info = debug.getinfo(stack_inspect_offset + CMD_STACK_LEVEL)
 		dbg_writeln("Already at the bottom of the stack.")
@@ -353,7 +353,7 @@ local function cmd_up()
 	if info then
 		stack_inspect_offset = offset
 		dbg_writeln("Inspecting frame: "..format_stack_frame_info(info))
-		if tonumber(dbg.auto_where) then where(info, dbg.auto_where) end
+		if tonumber(dbg.auto_where) then dbg.where(info, dbg.auto_where) end
 	else
 		info = debug.getinfo(stack_inspect_offset + CMD_STACK_LEVEL)
 		dbg_writeln("Already at the top of the stack.")
@@ -364,7 +364,7 @@ end
 
 local function cmd_where(context_lines)
 	local info = debug.getinfo(stack_inspect_offset + CMD_STACK_LEVEL)
-	return (info and where(info, tonumber(context_lines) or 5))
+	return (info and dbg.where(info, tonumber(context_lines) or 5))
 end
 
 local function cmd_trace()
@@ -479,7 +479,7 @@ repl = function(reason)
 	reason = reason and (COLOR_YELLOW.."break via "..COLOR_RED..reason..GREEN_CARET) or ""
 	dbg_writeln(reason..format_stack_frame_info(info))
 	
-	if tonumber(dbg.auto_where) then where(info, dbg.auto_where) end
+	if tonumber(dbg.auto_where) then dbg.where(info, dbg.auto_where) end
 	
 	repeat
 		local success, done, hook = pcall(run_command, dbg.read(COLOR_RED.."debugger.lua> "..COLOR_RESET))
@@ -514,6 +514,7 @@ dbg.shorten_path = function (path) return path end
 dbg.exit = function(err) os.exit(err) end
 
 dbg.writeln = dbg_writeln
+dbg.where = dbg_where
 
 dbg.pretty_depth = 3
 dbg.pretty = pretty

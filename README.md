@@ -1,7 +1,16 @@
-debugger.lua
-=
+# debugger.lua
 
-A simple, embedabble debugger for Lua 5.x, and LuaJIT 2.x.
+## update history
+
+### v1.0.1 (2023-12-08)
+
+- make where overloadable (where -> dbg.where)
+
+### v1.0.0 (initial import)
+
+## original introduction
+
+A simple, embeddable debugger for Lua 5.x, and LuaJIT 2.x.
 
 
 
@@ -55,7 +64,7 @@ Now in your Lua code you can just use the global variable or `require` the modul
 Debugger Commands:
 -
 
-If you have used other CLI debuggers, debugger.lua shouldn't be surprising. I didn't make a fancy parser, so the commands are just single letters. Since the debugger is pretty simple there are only a small handful of commands anwyay.
+If you have used other CLI debuggers, debugger.lua shouldn't be surprising. I didn't make a fancy parser, so the commands are just single letters. Since the debugger is pretty simple there are only a small handful of commands anyway.
 
 	[return] - re-run last command
 	c(ontinue) - contiue execution
@@ -106,7 +115,7 @@ Known Issues:
 - Lua 5.1 lacks the API to access varargs. The workaround is to do something like `local args = {...}` and then use `unpack(args)` when you want to access them. In Lua 5.2+ and LuaJIT, you can simply use `...` in your expressions with the print command.
 - You can't add breakpoints to a running program or remove them. Currently the only way to set them is by explicitly calling the `dbg()` function explicitly in your code. (This is sort of by design and sort of because it's difficult/slow otherwise.)
 - Different interpreters (and versions) print out slightly different stack trace information.
-- Tail calls are handled silghtly differently in different interpreters. You may find that 1.) stepping into a function that does nothing but a tail call steps you into the tail called function. 2.) The interpreter gives you the wrong name of a tail called function (watch the line numbers). 3.) Stepping out of a tail called function also steps out of the function that performed the tail call. Mostly this is never a problem, but it is a little confusing if you don't know what is going on.
+- Tail calls are handled slightly differently in different interpreters. You may find that 1.) stepping into a function that does nothing but a tail call steps you into the tail called function. 2.) The interpreter gives you the wrong name of a tail called function (watch the line numbers). 3.) Stepping out of a tail called function also steps out of the function that performed the tail call. Mostly this is never a problem, but it is a little confusing if you don't know what is going on.
 - Coroutine support has not been tested extensively yet, and Lua vs. LuaJIT handle them differently anyway. -_-
 
 License:
